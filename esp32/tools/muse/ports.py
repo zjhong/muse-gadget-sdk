@@ -30,12 +30,14 @@ import sys
 USJ = (0x303A, 0x1001)      # the chip's own USB Serial/JTAG
 CH342 = (0x1A86, 0x55D2)    # WCH dual UART bridge: two ports per device
 CH9102 = (0x1A86, 0x55D4)   # WCH single UART bridge
+CH340 = (0x1A86, 0x7523)    # WCH CH340C UART bridge
 
 # board.sh's name -> the USB device carrying its console.
 USB = {
     "s3": USJ,
     "s3n": USJ,
     "aipi": USJ,
+    "bread-lcd": CH340,
     "box3": USJ,
     "c6": USJ,
     "sticks3": USJ,
@@ -46,11 +48,11 @@ USB = {
 }
 # Boards whose console takes Muse's serial commands (tools/muse/chat.py). The
 # Watcher reads them on its CH342 port with MUSE_CONSOLE_UART.
-COMMANDS = ("s3", "s3n", "aipi", "box3", "c6", "sticks3", "watcher", "plus2", "cardputer-adv", "stopwatch")
+COMMANDS = ("s3", "s3n", "aipi", "bread-lcd", "box3", "c6", "sticks3", "watcher", "plus2", "cardputer-adv", "stopwatch")
 # Bridges that drop bytes when a whole packet arrives at once, so writes to them
 # go 64 bytes at a time at the line rate (paced_esptool.py, chat.Board.write).
 PACED = (CH342,)
-KINDS = {USJ: "Espressif USB Serial/JTAG", CH342: "CH342 bridge", CH9102: "CH9102 bridge"}
+KINDS = {USJ: "Espressif USB Serial/JTAG", CH342: "CH342 bridge", CH9102: "CH9102 bridge", CH340: "CH340C bridge"}
 
 
 class NotFound(Exception):

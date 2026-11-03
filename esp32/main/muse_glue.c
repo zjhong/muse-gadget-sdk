@@ -114,6 +114,14 @@ static bool load_creds(void) {
     char pass[MUSE_PASS_MAX + 1] = {0};
     if (!config_get_str("ssid", ssid, sizeof(ssid))) ssid[0] = '\0';
     if (!config_get_str("password", pass, sizeof(pass))) pass[0] = '\0';
+    // The Link dev override connects before Muse starts. Muse's keeper also
+    // owns the radio and would otherwise see no NVS SSID, then disconnect the
+    // just-connected override as "forgotten". Use the same local override as
+    // its in-memory network until the user provisions a saved network.
+    if (CONFIG_HOMEHUB_WIFI_SSID[0] && !ssid[0]) {
+        strlcpy(ssid, CONFIG_HOMEHUB_WIFI_SSID, sizeof(ssid));
+        strlcpy(pass, CONFIG_HOMEHUB_WIFI_PASSWORD, sizeof(pass));
+    }
     saved_net_t saved[MUSE_WIFI_SAVED_MAX];
     int n = -1;
     wifi_known_list_t *list = malloc(sizeof(*list));
